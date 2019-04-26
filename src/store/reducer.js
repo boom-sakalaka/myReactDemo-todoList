@@ -1,22 +1,23 @@
+import {CHANGE_INPUT_VALUE,CLICK_BTN_CHANGE,CLICK_DEL} from './actionTypes';
 const defaultState = {
     inputValue: '',
     list:[]
 }
 export default (state = defaultState,action) =>{
-    if(action.type === 'change_input_value'){
+    if(action.type === CHANGE_INPUT_VALUE){
         const newState = JSON.parse(JSON.stringify(state));
         newState.inputValue = action.value;
         return newState;
     }
-    if(action.type === 'click_btn_change'){
+    if(action.type === CLICK_BTN_CHANGE){
         const newState = JSON.parse(JSON.stringify(state));
         newState.list.push(newState.inputValue);
+        newState.inputValue = '';
         return newState;
     }
-    if(action.type === 'click_del'){
+    if(action.type === CLICK_DEL){
         const newState = JSON.parse(JSON.stringify(state));
         newState.list.splice(action.index,1);
-        newState.inputValue = '';
         return newState;
     }
     return state;
