@@ -1,10 +1,10 @@
-import React ,{Component,Fragment} from 'react';
-import {getInputChangeAction,getAddBtnChangeAction,getDelAction} from './store/actionCreators';
+import React ,{Component} from 'react';
+import {getInputChangeAction,getAddBtnChangeAction,getDelAction,getInitListData} from './store/actionCreators';
+import TodoListUI from './TodoListUI';
+import axios from 'axios';
 import 'antd/dist/antd.css';
 import store from './store';
-import {Input} from 'antd';
-import { Button } from 'antd';
-import { List} from 'antd';
+
 
 class TodoList extends Component  {
     constructor(props){
@@ -13,24 +13,27 @@ class TodoList extends Component  {
         this.handleChange = this.handleChange.bind(this);
         this.handleStoreChange = this.handleStoreChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleDel.bind(this);
         store.subscribe(this.handleStoreChange);
     }
     render() {
         return (
-           <Fragment>
-                <Input 
-                    value={this.state.inputValue} 
-                    style={{width: '300px'}}
-                    onChange ={this.handleChange} 
-                    /><Button type="primary" onClick={this.handleClick}>提交</Button>
-                <List
-                    style={{marginTop:'10px',width:'300px'}}
-                    bordered
-                    dataSource={this.state.list}
-                    renderItem={(item,index) => (<List.Item onClick={this.handleDel.bind(this,index)}>{item}</List.Item>)}
-                />
-           </Fragment>
+          <TodoListUI 
+          inputValue={this.state.inputValue}
+          handleChange ={this.handleChange}
+          handleClick ={this.handleClick}
+          handleDel ={this.handleDel}
+          list={this.state.list}
+          />
         )
+    }
+    componentDidMount() {
+        axios.get("http:////5cbddef8ecded20014c20c8e.mockapi.io/api/getList")
+        .then(({data})=>{
+            const action = getInitListData(data);
+            store.dispatch(action);
+        })
+        .catch()
     }
     handleChange (e) {
         const action = getInputChangeAction(e.target.value);
